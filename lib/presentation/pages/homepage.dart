@@ -21,22 +21,12 @@ class ProdutosHomePageState extends State<ProdutosHomePage> {
 
   // Método para carregar os produtos cadastrados
   _carregarProdutos() async {
-    //try {
     final produtos = await _produtoRepository.getProduto();
-    print(produtos);
     if (mounted) {
       setState(() {
         _produtos = produtos; // Atualiza a lista de produtos
       });
     }
-    /*} catch (e, stackTrace) {
-      debugPrint('Erro: $e\n$stackTrace');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao cadastrar material: $e')),
-        );
-      }
-    } */
   }
 
   @override
@@ -45,6 +35,47 @@ class ProdutosHomePageState extends State<ProdutosHomePage> {
       appBar: AppBar(
         title: const Text('Produtos Cadastrados'),
         backgroundColor: Colors.blue,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text('Cadastro de Produto'),
+              onTap: () {
+                Navigator.pushNamed(context, '/cadastroProduto');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.business),
+              title: const Text('Cadastro de Fornecedor'),
+              onTap: () {
+                Navigator.pushNamed(context, '/cadastroFornecedor');
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Sair'),
+              onTap: () {
+                Navigator.pop(context); // Fecha o Drawer
+              },
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
