@@ -17,11 +17,11 @@ class ProdutoRepositories {
     final List<Map<String, Object?>> produtoMaps = await db.query('Produto');
     return produtoMaps.map((map) {
       return ProdutoModel(
-          idMaterial: map['idMaterial'] as int?,
+          idMaterial: map['idproduto'] as int?,
           codigo: map['Codigo'] as String,
           nome: map['Nome'] as String,
           quantidade: map['Quantidade'] as int,
-          validade: map['Validade'] as String,
+          validade: map['Validade'] as String?,
           local: map['Local'] as String,
           idtipo: map['idtipo'] as int,
           idfornecedor: map['idfornecedor'] as int,
