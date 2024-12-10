@@ -2,9 +2,8 @@ import 'package:app_estoque_limpeza/data/model/produto_model.dart';
 import 'package:app_estoque_limpeza/data/repositories/fornecedor_repository.dart';
 import 'package:app_estoque_limpeza/data/repositories/produto_repositories.dart';
 import 'package:app_estoque_limpeza/data/repositories/tipo_repositories.dart';
+import 'package:app_estoque_limpeza/presentation/pages/homepage_admin.dart';
 import 'package:flutter/material.dart';
-
-import 'homepage.dart';
 
 class ProdutosPage extends StatefulWidget {
   const ProdutosPage({super.key});
@@ -108,7 +107,7 @@ class ProdutosState extends State<ProdutosPage> {
           });
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const ProdutosHomePage()),
+            MaterialPageRoute(builder: (context) => const HomePageAdmin()),
             (Route<dynamic> route) => false, // Remove todas as rotas anteriores
           );
         }

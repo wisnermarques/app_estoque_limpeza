@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:app_estoque_limpeza/core/database_helper.dart';
 import 'package:app_estoque_limpeza/data/model/usuario_model.dart';
+import 'package:crypto/crypto.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class UsuarioRepository {
@@ -20,9 +22,10 @@ class UsuarioRepository {
         idusuario: map['idusuario'] as int?,
         matricula: map['matricula'] as String,
         nome: map['nome'] as String,
-        idtelefone: map['idtelefone'] as int,
+        telefone: map['telefone'] as String,
         email: map['email'] as String,
         idperfil: map['idperfil'] as int,
+        senha: map['senha'] as String,
       );
     }).toList();
   }
@@ -44,5 +47,29 @@ class UsuarioRepository {
       where: 'idusuario = ?',
       whereArgs: [id],
     );
+  }
+
+  // Retorna o objeto Usuario se as credenciais forem válidas, ou null caso contrário
+  Future<Usuario?> verifyLogin(String matricula, String password) async {
+    final db = await DatabaseHelper.initDb();
+    final encryptedPassword = sha256.convert(utf8.encode(password)).toString();
+    final result = await db.query(
+      'usuario',
+      where: 'matricula = ? AND senha = ?',
+      whereArgs: [matricula, encryptedPassword],
+    );
+
+    if (result.isNotEmpty) {
+      return Usuario(
+        idusuario: result.first['idusuario'] as int?,
+        matricula: result.first['matricula'] as String,
+        nome: result.first['nome'] as String,
+        telefone: result.first['telefone'] as String,
+        email: result.first['email'] as String,
+        idperfil: result.first['idperfil'] as int,
+        senha: result.first['senha'] as String,
+      );
+    }
+    return null;
   }
 }

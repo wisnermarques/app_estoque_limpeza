@@ -2,17 +2,19 @@ class Usuario {
   final int? idusuario;
   final String matricula;
   final String nome;
-  final int idtelefone;
+  final String telefone;
   final String email;
   final int idperfil;
+  final String senha;
 
   Usuario({
     this.idusuario,
     required this.matricula,
     required this.nome,
-    required this.idtelefone,
+    required this.telefone,
     required this.email,
     required this.idperfil,
+    required this.senha,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,9 +22,10 @@ class Usuario {
       'idusuario': idusuario,
       'matricula': matricula,
       'nome': nome,
-      'idtelefone': idtelefone,
+      'telefone': telefone,
       'email': email,
       'idperfil': idperfil,
+      'senha': senha,
     };
   }
 }

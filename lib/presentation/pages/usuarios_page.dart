@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:app_estoque_limpeza/data/repositories/usuario_repositories.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:app_estoque_limpeza/data/model/usuario_model.dart';
 
@@ -14,6 +17,7 @@ class UsuariosPageState extends State<UsuariosPage> {
   final TextEditingController _telefoneController = TextEditingController();
   final TextEditingController _matriculaController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController = TextEditingController();
 
   final List<String> _perfis = ['Administrador', 'Usuário'];
   String? _perfilSelecionado;
@@ -25,12 +29,19 @@ class UsuariosPageState extends State<UsuariosPage> {
   Future<void> _cadastrarUsuario() async {
     if (_formKey.currentState!.validate()) {
       try {
+        // Criptografar a senha usando SHA-256
+        final bytes =
+            utf8.encode(_senhaController.text); // Converte a senha em bytes
+        final senhaCriptografada =
+            sha256.convert(bytes).toString(); // Gera o hash
+
         final novoUsuario = Usuario(
           idusuario: null,
           matricula: _matriculaController.text,
           nome: _nomeController.text,
-          idtelefone: int.parse(_telefoneController.text),
+          telefone: _telefoneController.text,
           email: _emailController.text,
+          senha: senhaCriptografada, // Armazena a senha criptografada
           idperfil: _perfis.indexOf(_perfilSelecionado!) + 1,
         );
 
@@ -50,6 +61,7 @@ class UsuariosPageState extends State<UsuariosPage> {
         _telefoneController.clear();
         _matriculaController.clear();
         _emailController.clear();
+        _senhaController.clear();
         setState(() {
           _perfilSelecionado = null;
         });
@@ -150,6 +162,20 @@ class UsuariosPageState extends State<UsuariosPage> {
                   }
                   if (value.length < 3) {
                     return 'A matrícula deve conter no mínimo 3 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _senhaController,
+                obscureText: true,
+                decoration: inputDecoration.copyWith(labelText: 'Senha'),
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(color: Colors.black),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'A senha é obrigatório';
                   }
                   return null;
                 },

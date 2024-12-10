@@ -24,6 +24,13 @@ class DatabaseHelper {
             );
           ''');
 
+           await db.execute('''
+            CREATE TABLE perfil(
+              idperfil INTEGER PRIMARY KEY,
+              perfil TEXT NOT NULL
+            );
+          ''');
+
           await db.execute('''
             CREATE TABLE fornecedor (
               idfornecedor INTEGER PRIMARY KEY,
@@ -54,8 +61,11 @@ class DatabaseHelper {
               idusuario INTEGER PRIMARY KEY,
               matricula TEXT NOT NULL UNIQUE,
               nome TEXT NOT NULL,
-              telefone INTEGER NOT NULL,
-              email TEXT NOT NULL UNIQUE
+              telefone TEXT NOT NULL,
+              email TEXT NOT NULL UNIQUE,
+              senha TEXT NOT NULL,
+              idperfil INTEGER NOT NULL,
+              FOREIGN KEY (idperfil) REFERENCES tipo(idperfil)
             );
           ''');
 
