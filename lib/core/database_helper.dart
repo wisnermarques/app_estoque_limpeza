@@ -1,22 +1,25 @@
+import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
   static Future<Database> initDb() async {
-    // Inicializa a interface FFI para SQLite
-    sqfliteFfiInit();
+    // Inicializa o FFI apenas para plataformas Desktop
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
 
     // Caminho do banco de dados
-    final databasePath = await databaseFactoryFfi.getDatabasesPath();
+    final databasePath = await databaseFactory.getDatabasesPath();
     final path = join(databasePath, 'mydb.db');
 
     // Abre ou cria o banco de dados
-    return await databaseFactoryFfi.openDatabase(
+    return await databaseFactory.openDatabase(
       path,
       options: OpenDatabaseOptions(
         version: 1,
         onCreate: (db, version) async {
-          // Criação das tabelas
           await db.execute('''
             CREATE TABLE tipo (
               idtipo INTEGER PRIMARY KEY,
@@ -24,8 +27,8 @@ class DatabaseHelper {
             );
           ''');
 
-           await db.execute('''
-            CREATE TABLE perfil(
+          await db.execute('''
+            CREATE TABLE perfil (
               idperfil INTEGER PRIMARY KEY,
               perfil TEXT NOT NULL
             );
@@ -82,7 +85,7 @@ class DatabaseHelper {
           ''');
         },
         onUpgrade: (db, oldVersion, newVersion) async {
-          // Adicione lógica de upgrade se necessário
+          // Adicione lógica de upgrade, se necessário
         },
       ),
     );
